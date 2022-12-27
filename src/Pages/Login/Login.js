@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { toast } from 'react-hot-toast';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../../contexts/AuthProvider/AuthProvider';
 
 const Login = () => {
+
+    const { signIn } = useContext(AuthContext);
 
     const handleSignin = e => {
         e.preventDefault();
@@ -9,12 +13,23 @@ const Login = () => {
         const form = e.target;
 
         const email = form.email.value;
-        console.log("🚀 ~ file: Login.js:11 ~ handleSignin ~ email", email)
         const password = form.password.value;
-        console.log("🚀 ~ file: Login.js:13 ~ handleSignin ~ password", password)
+
+        signIn(email, password)
+            .then(result => {
+                const user = result.user;
+                console.log("🚀 ~ file: Login.js ~ line 18 ~ handleLogin ~ user", user)
+
+                toast.success('User Logged in')
+
+            })
+            .catch(err => {
+                console.error(err.message)
+            })
 
 
     }
+
 
     return (
         <div className="m-auto 

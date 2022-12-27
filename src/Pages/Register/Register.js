@@ -1,25 +1,68 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { toast } from 'react-hot-toast';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../../contexts/AuthProvider/AuthProvider';
 
 const Register = () => {
+
+    const { createUser, updateUser } = useContext(AuthContext);
+
 
     const handleSignup = e => {
         e.preventDefault();
 
         const form = e.target;
-        const name = form.name.value;
-        console.log("🚀 ~ file: Register.js:11 ~ handleSignup ~ name", name)
-        const email = form.email.value;
-        console.log("🚀 ~ file: Register.js:13 ~ handleSignup ~ email", email)
-        const university = form.university.value;
-        console.log("🚀 ~ file: Register.js:15 ~ handleSignup ~ university", university)
-        const address = form.address.value;
-        console.log("🚀 ~ file: Register.js:17 ~ handleSignup ~ address", address)
-        const password = form.password.value;
-        console.log("🚀 ~ file: Register.js:19 ~ handleSignup ~ password", password)
 
+        const name = form.name.value;
+        const email = form.email.value;
+        const university = form.university.value;
+        const address = form.address.value;
+        const password = form.password.value;
+
+
+        createUser(email, password)
+            .then(result => {
+                const user = result.user;
+                console.log(user);
+                toast.success('User registered Successfully');
+                const userInfo = {
+                    displayName: name
+                }
+
+                updateUser(userInfo)
+                    .then(() => {
+                        saveUser(name, email, university, address);
+                    })
+
+            })
+            .catch(err => {
+                console.error(err.message)
+            })
+            .catch(error => {
+                console.log(error)
+            });
+
+
+        const saveUser = (name, email, university, address) => {
+
+            console.log(name, email, university, address);
+            // axios.post(`https://resale-treasury-server-site.vercel.app/users`, {
+            //     name: name,
+            //     email: email,
+            //     userName: userName
+            // })
+            //     .then(function (response) {
+            //         console.log(response);
+            //     })
+            //     .catch(function (error) {
+            //         console.log(error);
+            //     });
+        }
 
     }
+
+
+
 
     return (
         <div className="m-auto 

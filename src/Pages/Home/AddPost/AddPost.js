@@ -7,7 +7,7 @@ const AddPost = () => {
             <div className="heading text-center font-bold text-2xl m-5 text-gray-800">Add new Post</div>
 
             <div className="editor mx-auto w-10/12 flex flex-col text-gray-800 border border-gray-300 p-4 shadow-lg max-w-2xl">
-                <textarea className="description bg-gray-100 sec p-3 h-60 border border-gray-300 outline-none" spellcheck="false" placeholder="Whats on your mind?"></textarea>
+                <textarea className="description bg-gray-100 sec p-3 h-60 border border-gray-300 outline-none" spellCheck="false" placeholder="Whats on your mind?"></textarea>
 
 
                 <div className="icons flex text-gray-500 m-2">
