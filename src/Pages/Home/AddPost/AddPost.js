@@ -1,4 +1,6 @@
+import axios from 'axios';
 import React from 'react';
+import { toast } from 'react-hot-toast';
 
 const AddPost = () => {
 
@@ -6,20 +8,49 @@ const AddPost = () => {
 
     const imageHostKey = process.env.REACT_APP_imgbb_key;
 
+    const postedTime = new Date().toLocaleTimeString();
+
     const handlePostSubmit = e => {
         e.preventDefault();
         const form = e.target;
         const post = form.post.value;
-        console.log("🚀 ~ file: AddPost.js:9 ~ handlePostSubmit ~ post", post)
-
         const postedImage = form.posted_img.files[0];
-
         const image = postedImage;
-        console.log("🚀 ~ file: AddPost.js:14 ~ handlePostSubmit ~ image", image)
+
 
         const formData = new FormData();
         formData.append('image', image);
         const url = `https://api.imgbb.com/1/upload?key=${imageHostKey}`
+
+
+        fetch(url, {
+            method: 'POST',
+            body: formData
+        })
+            .then(res => res.json())
+
+            .then(imgData => {
+                console.log(imgData);
+                if (imgData.success) {
+
+
+                    axios.post(`http://localhost:5000/userpost`, {
+                        image: imgData?.data.url,
+                        post: post,
+                        posted: postedTime
+                    })
+                        .then(function (response) {
+                            console.log(response);
+                            toast.success(`posted successfully`);
+                            form.reset();
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+
+
+                }
+            })
 
     }
 
