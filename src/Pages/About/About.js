@@ -1,30 +1,12 @@
-import { useQuery } from '@tanstack/react-query';
 import React, { useContext, useState } from 'react';
-import Loading from '../../Components/UseLoader/Loading';
 import { AuthContext } from '../../contexts/AuthProvider/AuthProvider';
 
 const About = () => {
 
     const imageHostKey = process.env.REACT_APP_imgbb_key;
-    const { user } = useContext(AuthContext);
+    const { userData } = useContext(AuthContext);
     const [modal, setModal] = useState(false);
 
-
-    const { data: userData = [], isLoading } = useQuery({
-        queryKey: ['userData'],
-        queryFn: async () => {
-            const res = await fetch(`http://localhost:5000/user?email=${user?.email}`)
-            const data = await res.json()
-            return data
-        }
-    })
-
-
-    console.log(userData);
-
-    if (isLoading) {
-        return <Loading />;
-    }
 
     const handleUserUpdate = e => {
         e.preventDefault()
@@ -66,8 +48,12 @@ const About = () => {
 
                     <div className="space-y-4">
                         <div>
-                            <label readOnly className="block mb-2 text-sm">Profile Picture</label>
-                            <img alt={userInfo?.name} src={userInfo?.image} />
+                            <label readOnly className="block mb-2 text-center text-sm">Profile Picture</label>
+                            <img style={{
+                                margin: 'auto',
+                                height: '180px',
+                                width: '180px'
+                            }} alt={userInfo?.name} src={userInfo?.profileImage} />
                         </div>
                         <div>
                             <label htmlFor="name" className="block mb-2 text-sm">Full Name</label>

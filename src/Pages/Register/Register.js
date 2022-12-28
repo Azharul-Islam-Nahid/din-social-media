@@ -6,6 +6,7 @@ import { AuthContext } from '../../contexts/AuthProvider/AuthProvider';
 
 const Register = () => {
 
+    const imageHostKey = process.env.REACT_APP_imgbb_key;
     const { createUser, updateUser } = useContext(AuthContext);
     const navigate = useNavigate();
 
@@ -20,6 +21,12 @@ const Register = () => {
         const university = form.university.value;
         const address = form.address.value;
         const password = form.password.value;
+        const postedImage = form.image.files[0];
+        const image = postedImage;
+
+        const formData = new FormData();
+        formData.append('image', image);
+        const url = `https://api.imgbb.com/1/upload?key=${imageHostKey}`
 
 
         createUser(email, password)
@@ -49,18 +56,33 @@ const Register = () => {
 
         const saveUser = (name, email, university, address) => {
 
-            axios.post(`http://localhost:5000/users`, {
-                name: name,
-                email: email,
-                university: university,
-                address: address
+            fetch(url, {
+                method: 'POST',
+                body: formData
             })
-                .then(function (response) {
-                    console.log(response);
-                })
-                .catch(function (error) {
-                    console.log(error);
+                .then(res => res.json())
+
+                .then(imgData => {
+                    console.log(imgData);
+                    if (imgData.success) {
+                        axios.post(`http://localhost:5000/users`, {
+                            name: name,
+                            email: email,
+                            profileImage: imgData?.data.url,
+                            university: university,
+                            address: address
+                        })
+                            .then(function (response) {
+                                console.log(response);
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
+                    }
+
                 });
+
+
         }
 
     }
@@ -84,6 +106,10 @@ const Register = () => {
                     <div>
                         <label htmlFor="email" className="block mb-2 text-sm">Email address</label>
                         <input type="email" name="email" id="email" placeholder="Enter your email here" className="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800" required />
+                    </div>
+                    <div>
+                        <label htmlFor="image" className="block mb-2 text-sm">Profile Picture</label>
+                        <input type="file" name="image" id="image" placeholder="Upload your profile image" className="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800" required />
                     </div>
                     <div>
                         <label htmlFor="university" className="block mb-2 text-sm">University</label>
