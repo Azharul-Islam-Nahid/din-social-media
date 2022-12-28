@@ -1,11 +1,15 @@
 import React, { useContext } from 'react';
 import { toast } from 'react-hot-toast';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../contexts/AuthProvider/AuthProvider';
 
 const Login = () => {
 
     const { signIn } = useContext(AuthContext);
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const from = location.state?.from?.pathname || '/';
 
     const handleSignin = e => {
         e.preventDefault();
@@ -20,6 +24,7 @@ const Login = () => {
                 const user = result.user;
                 console.log("🚀 ~ file: Login.js ~ line 18 ~ handleLogin ~ user", user)
 
+                navigate(from, { replace: true });
                 toast.success('User Logged in')
 
             })

@@ -1,11 +1,13 @@
+import axios from 'axios';
 import React, { useContext } from 'react';
 import { toast } from 'react-hot-toast';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../contexts/AuthProvider/AuthProvider';
 
 const Register = () => {
 
     const { createUser, updateUser } = useContext(AuthContext);
+    const navigate = useNavigate();
 
 
     const handleSignup = e => {
@@ -34,6 +36,8 @@ const Register = () => {
                         saveUser(name, email, university, address);
                     })
 
+                navigate('/')
+
             })
             .catch(err => {
                 console.error(err.message)
@@ -45,18 +49,18 @@ const Register = () => {
 
         const saveUser = (name, email, university, address) => {
 
-            console.log(name, email, university, address);
-            // axios.post(`https://resale-treasury-server-site.vercel.app/users`, {
-            //     name: name,
-            //     email: email,
-            //     userName: userName
-            // })
-            //     .then(function (response) {
-            //         console.log(response);
-            //     })
-            //     .catch(function (error) {
-            //         console.log(error);
-            //     });
+            axios.post(`http://localhost:5000/users`, {
+                name: name,
+                email: email,
+                university: university,
+                address: address
+            })
+                .then(function (response) {
+                    console.log(response);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         }
 
     }

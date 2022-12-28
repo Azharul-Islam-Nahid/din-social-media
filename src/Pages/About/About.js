@@ -1,9 +1,118 @@
-import React from 'react';
+import { useQuery } from '@tanstack/react-query';
+import React, { useContext, useState } from 'react';
+import Loading from '../../Components/UseLoader/Loading';
+import { AuthContext } from '../../contexts/AuthProvider/AuthProvider';
 
 const About = () => {
+
+    const imageHostKey = process.env.REACT_APP_imgbb_key;
+    const { user } = useContext(AuthContext);
+    const [modal, setModal] = useState(false);
+
+
+    const { data: userData = [], isLoading } = useQuery({
+        queryKey: ['userData'],
+        queryFn: async () => {
+            const res = await fetch(`http://localhost:5000/user?email=${user?.email}`)
+            const data = await res.json()
+            return data
+        }
+    })
+
+
+    console.log(userData);
+
+    if (isLoading) {
+        return <Loading />;
+    }
+
+    const handleUserUpdate = e => {
+        e.preventDefault()
+
+        const form = e.target;
+        const name = form.name.value;
+        console.log("🚀 ~ file: About.js:33 ~ handleUserUpdate ~ name", name)
+        const email = form.email.value;
+        console.log("🚀 ~ file: About.js:35 ~ handleUserUpdate ~ email", email)
+        const postedImage = form.photo.files[0];
+        const image = postedImage;
+        console.log("🚀 ~ file: About.js:39 ~ handleUserUpdate ~ image", image)
+
+
+        const formData = new FormData();
+        formData.append('image', image);
+        const url = `https://api.imgbb.com/1/upload?key=${imageHostKey}`
+
+        const university = form.university.value;
+        console.log("🚀 ~ file: About.js:37 ~ handleUserUpdate ~ university", university)
+        const address = form.address.value;
+        console.log("🚀 ~ file: About.js:39 ~ handleUserUpdate ~ address", address)
+
+
+    }
+
+
     return (
-        <div>
-            about
+        <div className="m-auto 
+        mb-20 flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-50 text-gray-800">
+            <div className="mb-8 text-center">
+                <h1 className="my-3 text-4xl font-bold">User Information</h1>
+            </div>
+            {
+                userData.map(userInfo => <form
+                    key={userInfo?._id}
+                    className="space-y-12 ng-untouched ng-pristine ng-valid">
+
+
+                    <div className="space-y-4">
+                        <div>
+                            <label readOnly className="block mb-2 text-sm">Profile Picture</label>
+                            <img alt={userInfo?.name} src={userInfo?.image} />
+                        </div>
+                        <div>
+                            <label htmlFor="name" className="block mb-2 text-sm">Full Name</label>
+                            <input readOnly defaultValue={userInfo?.name} type="text" name="name" id="name" placeholder="Enter your name here" className="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800" required />
+                        </div>
+                        <div>
+                            <label className="block mb-2 text-sm">Email address</label>
+                            <input type="email" defaultValue={userInfo?.email} readOnly placeholder="Enter your email here" className="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800" required />
+                        </div>
+                        <div>
+                            <label readOnly htmlFor="university" className="block mb-2 text-sm">University</label>
+                            <input defaultValue={userInfo?.university} type="text" name="university" id="university" placeholder="Enter your university name" className="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800" required />
+                        </div>
+                        <div>
+                            <label readOnly htmlFor="address" className="block mb-2 text-sm">Address</label>
+                            <input defaultValue={userInfo?.address} className="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800" required />
+                        </div>
+                    </div>
+                    <div className="space-y-2">
+                        <p className="text-sm text-black">Update user information</p>
+                        <div>
+                            <button onClick={() => setModal(true)} type="button" className="w-full px-8 py-3 font-semibold rounded-md bg-sky-600 text-gray-50">update</button>
+                        </div>
+                    </div>
+                </form>
+                )}
+            {modal ? (
+
+                <>
+                    <form onSubmit={handleUserUpdate} className="flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 mx-auto my-auto flex-col max-w-md gap-2 p-6 rounded-md shadow-md bg-slate-800">
+                        <button onClick={() => setModal(false)} className="btn btn-sm btn-circle absolute right-6 top-4">✕</button>
+                        <h3 className="text-sm text-white font-bold">Your Name</h3>
+                        <input name="name" type="text" className="input w-full input-bordered font-semibold" />
+                        <h3 className="text-sm text-white font-bold">Your Email</h3>
+                        <input name="email" type="email" className="input w-full input-bordered font-semibold" />
+                        <h3 className="text-sm text-white font-bold">Profile photo</h3>
+                        <input name="photo" type="file" className="input w-full input-bordered font-semibold" />
+                        <h3 className="text-sm text-white font-bold">Your University</h3>
+                        <input name="university" type="text" placeholder='Your University Name' className="input w-full input-bordered font-semibold" required />
+                        <h3 className="text-sm text-white font-bold">Your Address</h3>
+                        <input name="address" type="text" placeholder='Your Address' className="input w-full input-bordered font-bold" required />
+                        <input className='btn btn-primary w-full' type="submit" value="Update Information" />
+                    </form>
+                </>
+            ) : null}
         </div>
     );
 };
