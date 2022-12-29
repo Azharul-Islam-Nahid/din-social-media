@@ -27,7 +27,7 @@ const Media = () => {
             {
                 userPosts.map(userPost => <div
                     key={userPost?._id}
-                    className="mb-20 m-auto bg-white border rounded-sm max-w-md">
+                    className="mb-20 m-auto bg-white border rounded-sm lg:w-7/12">
                     <div className="flex items-center px-4 py-3">
                         <img alt='' className="h-8 w-8 rounded-full" src={userPost?.userImage} />
                         <div className="ml-3 ">
