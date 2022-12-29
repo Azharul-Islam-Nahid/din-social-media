@@ -1,10 +1,11 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import Loading from '../../../Components/UseLoader/Loading';
 import { AuthContext } from '../../../contexts/AuthProvider/AuthProvider';
 
 const Navbar = () => {
 
-    const { user, logOut } = useContext(AuthContext);
+    const { user, logOut, userData, isLoading } = useContext(AuthContext);
 
     const handleLogOut = () => {
         logOut()
@@ -13,10 +14,27 @@ const Navbar = () => {
     }
 
     const menuItems = <React.Fragment>
-        <li><Link to="/media">Media</Link></li>
-        <li><Link to="/message">Message</Link></li>
-        <li><Link to="/about">About</Link></li>
+        {user?.email ?
+            <>
+                <li><Link to="/media">Media</Link></li>
+                <li><Link to="/message">Message</Link></li>
+                <li><Link to="/about">About</Link></li>
+                <li onClick={handleLogOut}><Link>Logout</Link></li>
+            </>
+            :
+            <>
+                <li><Link to="/media">Media</Link></li>
+                <li><Link to="/message">Message</Link></li>
+                <li><Link to="/about">About</Link></li>
+                <li><Link to='/login'>Login</Link></li>
+                <li><Link to='/register'>Register</Link></li>
+            </>
+        }
     </React.Fragment>
+
+    if (isLoading) {
+        return <Loading />
+    }
 
     return (
         <div className="navbar bg-emerald-400">
@@ -40,27 +58,26 @@ const Navbar = () => {
 
                 <div className="dropdown dropdown-end">
                     <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
-                        <div className="w-10 rounded-full">
-                            <img alt='' src="https://placeimg.com/80/80/people" />
-                        </div>
+                        {
+                            userData.map(userInfo => <div
+                                key={userInfo?._id}
+                                className="w-10 rounded-full">
+                                {
+                                    user?.email &&
+                                    <img alt='user' src={userInfo?.image} />
+                                }
+                            </div>)
+                        }
+
                     </label>
                     <ul tabIndex={0} className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
                         <li>
-                            <Link className="justify-between">
+                            <Link to='/about' className="justify-between">
                                 Profile
                                 <span className="badge">New</span>
                             </Link>
                         </li>
                         <li><Link>Settings</Link></li>
-                        {user?.email ?
-
-                            <li onClick={handleLogOut}><Link>Logout</Link></li>
-                            :
-                            <>
-                                <li><Link to='/login'>Login</Link></li>
-                                <li><Link to='/register'>Register</Link></li>
-                            </>
-                        }
                     </ul>
                 </div>
             </div>
