@@ -1,11 +1,14 @@
+import { GoogleAuthProvider } from 'firebase/auth';
 import React, { useContext } from 'react';
 import { toast } from 'react-hot-toast';
+import { FaGoogle } from 'react-icons/fa';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../contexts/AuthProvider/AuthProvider';
 
 const Login = () => {
 
-    const { signIn } = useContext(AuthContext);
+    const { signIn, providerLogin } = useContext(AuthContext);
+    const googleProvider = new GoogleAuthProvider();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -25,11 +28,27 @@ const Login = () => {
                 console.log("🚀 ~ file: Login.js ~ line 18 ~ handleLogin ~ user", user)
 
                 navigate(from, { replace: true });
-                toast.success('User Logged in')
+                toast.success('Successfully Logged In')
 
             })
             .catch(err => {
                 console.error(err.message)
+            })
+
+
+    }
+
+    const HandleGoogleSignIn = () => {
+        providerLogin(googleProvider)
+            .then(result => {
+                const user = result.user;
+                console.log("🚀 ~ file: Login.js:45 ~ HandleGoogleSignIn ~ user", user)
+                navigate(from, { replace: true });
+                toast.success('Successfully Logged In');
+            })
+
+            .catch(error => {
+                console.log(error.message)
             })
 
 
@@ -60,6 +79,7 @@ const Login = () => {
                 <div className="space-y-2">
                     <div>
                         <button type="submit" className="w-full px-8 py-3 font-semibold rounded-md bg-sky-600 text-gray-50">Sign in</button>
+                        <button onClick={HandleGoogleSignIn} type="button" className="flex justify-center  mt-2 w-full px-8 py-3 font-semibold rounded-md bg-sky-600 text-gray-50">Sign in with <span className='mt-1 ml-2'><FaGoogle /></span>oogle</button>
                     </div>
                     <p className="px-6 text-sm text-center text-gray-600">Don't have an account yet?
                         <Link to='/register' className="hover:underline text-sky-600">Sign up</Link>.

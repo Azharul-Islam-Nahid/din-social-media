@@ -64,7 +64,6 @@ const AddPost = () => {
         return <Loading />
     }
 
-    console.log(userData);
 
     return (
         <div className='m-auto mt-5 mb-5 lg:w-7/12'>

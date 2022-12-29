@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { FaGoogle } from 'react-icons/fa';
+import { GoogleAuthProvider } from 'firebase/auth';
 import React, { useContext } from 'react';
 import { toast } from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
@@ -7,9 +9,10 @@ import { AuthContext } from '../../contexts/AuthProvider/AuthProvider';
 const Register = () => {
 
     const imageHostKey = process.env.REACT_APP_imgbb_key;
-    const { createUser, updateUser } = useContext(AuthContext);
-    const navigate = useNavigate();
+    const { createUser, updateUser, providerLogin } = useContext(AuthContext);
 
+    const navigate = useNavigate();
+    const googleProvider = new GoogleAuthProvider();
 
     const handleSignup = e => {
         e.preventDefault();
@@ -33,7 +36,7 @@ const Register = () => {
             .then(result => {
                 const user = result.user;
                 console.log(user);
-                toast.success('User registered Successfully');
+                toast.success('User Created Successfully');
                 const userInfo = {
                     displayName: name
                 }
@@ -52,6 +55,7 @@ const Register = () => {
             .catch(error => {
                 console.log(error)
             });
+
 
 
         const saveUser = (name, email, university, address) => {
@@ -82,8 +86,52 @@ const Register = () => {
 
                 });
 
-
         }
+
+
+
+    }
+
+
+    const saveUser = (name, email) => {
+
+        axios.post(`https://din-social-media-server.vercel.app/users`, {
+            name: name,
+            email: email,
+        })
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+
+    }
+
+
+    const HandleGoogleSignIn = ({ name, email }) => {
+        providerLogin(googleProvider)
+            .then(result => {
+                const user = result.user;
+                console.log(user);
+                navigate('/')
+                toast.success('User Created Successfully')
+                const userInfo = {
+                    email: user.email,
+                    name: user.displayName,
+                }
+                updateUser(userInfo)
+                    .then(() => {
+                        saveUser(name = user.displayName, email = user.email);
+                    })
+                    .catch(err => console.log(err));
+            })
+            .catch(error => {
+                console.log(error)
+            });
+
+
 
     }
 
@@ -130,6 +178,7 @@ const Register = () => {
                 <div className="space-y-2">
                     <div>
                         <button type="submit" className="w-full px-8 py-3 font-semibold rounded-md bg-sky-600 text-gray-50">Sign in</button>
+                        <button onClick={HandleGoogleSignIn} type="button" className="flex justify-center  mt-2 w-full px-8 py-3 font-semibold rounded-md bg-sky-600 text-gray-50">Sign up with <span className='mt-1 ml-2'><FaGoogle /></span>oogle</button>
                     </div>
                     <p className="px-6 text-sm text-center text-gray-600">Already have an account?
                         <Link to='/login' className="hover:underline text-sky-600">Sign in</Link>.

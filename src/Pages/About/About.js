@@ -119,16 +119,16 @@ const About = () => {
                     <form onSubmit={handleUserUpdate} className="flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 mx-auto my-auto flex-col max-w-md gap-2 p-6 rounded-md shadow-md bg-slate-800">
                         <button onClick={() => setModal(false)} className="btn btn-sm btn-circle absolute right-6 top-4">✕</button>
                         <h3 className="text-sm text-white font-bold">Your Name</h3>
-                        <input name="name" type="text" className="input w-full input-bordered font-semibold" />
+                        <input defaultValue={user?.displayName} name="name" type="text" className="input w-full input-bordered font-semibold" />
                         <h3 className="text-sm text-white font-bold">Your Email</h3>
                         <input readOnly defaultValue={user?.email} name="email" type="email" className="input w-full input-bordered font-semibold" />
                         <h3 className="text-sm text-white font-bold">Profile photo</h3>
                         <input name="photo" type="file" className="input w-full input-bordered font-semibold" />
                         <h3 className="text-sm text-white font-bold">Your University</h3>
-                        <input name="university" type="text" placeholder='Your University Name' className="input w-full input-bordered font-semibold" required />
-                        <h3 className="text-sm text-white font-bold">Your Address</h3>
-                        <input name="address" type="text" placeholder='Your Address' className="input w-full input-bordered font-bold" required />
-                        <input className='btn btn-primary w-full' type="submit" value="Update Information" />
+                        <input name="university" type="text" placeholder='Your University Name' className="input w-full input-bordered text-white font-bold" required />
+                        <h3 className="text-sm text-white font-semibold">Your Address</h3>
+                        <input name="address" type="text" placeholder='Your Address' className="input w-full input-bordered text-white font-semibold" required />
+                        <input className='btn btn-primary w-full font-bold ' type="submit" value="Update Information" />
                     </form>
                 </>
             ) : null}
