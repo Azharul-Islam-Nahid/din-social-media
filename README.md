@@ -6,6 +6,25 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
+
+* Project name:Din Social Media, Social communication app based on react single page web app.
+
+* CSS component library used Tailwind & Daisy UI & mamba.
+
+* Authenticated using google firebase.
+
+* Added Private route.
+
+* stream chat implemented.
+
+* User friendly Interface.
+
+* posting & updating  function available.
+
+* All data fetched & stored in mongo db server.
+
+* Fully desktop & mobile responsive site.
+
 ### `npm start`
 
 Runs the app in the development mode.\
