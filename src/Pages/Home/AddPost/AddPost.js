@@ -66,7 +66,7 @@ const AddPost = () => {
 
 
     return (
-        <div className='m-auto mt-5 mb-5 lg:w-7/12'>
+        <div className='block md:block lg:block m-auto mt-5 mb-5 lg:w-7/12'>
             {
                 userData.map(user => <form
                     key={user?._id}
