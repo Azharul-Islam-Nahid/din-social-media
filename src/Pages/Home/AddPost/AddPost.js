@@ -71,7 +71,7 @@ const AddPost = () => {
                     <div className='hidden lg:hidden md:hidden'>
                         <input defaultValue={user?.name} id="name" name='name' type='text'></input>
                         <input defaultValue={user?.address} id="address" name='address' type='text'></input>
-                        <input defaultValue={user?.profileImage} id="image" name='image' type='text'></input>
+                        <input defaultValue={user?.image} id="image" name='image' type='text'></input>
                     </div>
                     <div className="editor mx-auto w-10/12 flex flex-col text-gray-800 border border-gray-300 p-4 shadow-lg max-w-2xl">
                         <textarea type="text" name="post" id="post" className="description bg-gray-100 sec p-3 h-60 border border-gray-300 outline-none" spellCheck="false" placeholder="Whats on your mind?" required></textarea>

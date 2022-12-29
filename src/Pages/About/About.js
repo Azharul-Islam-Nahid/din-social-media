@@ -1,10 +1,11 @@
 import React, { useContext, useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { AuthContext } from '../../contexts/AuthProvider/AuthProvider';
 
 const About = () => {
 
     const imageHostKey = process.env.REACT_APP_imgbb_key;
-    const { userData } = useContext(AuthContext);
+    const { user, userData, refetch } = useContext(AuthContext);
     const [modal, setModal] = useState(false);
 
 
@@ -13,12 +14,9 @@ const About = () => {
 
         const form = e.target;
         const name = form.name.value;
-        console.log("🚀 ~ file: About.js:33 ~ handleUserUpdate ~ name", name)
-        const email = form.email.value;
-        console.log("🚀 ~ file: About.js:35 ~ handleUserUpdate ~ email", email)
+        const email = user?.email;
         const postedImage = form.photo.files[0];
         const image = postedImage;
-        console.log("🚀 ~ file: About.js:39 ~ handleUserUpdate ~ image", image)
 
 
         const formData = new FormData();
@@ -26,10 +24,45 @@ const About = () => {
         const url = `https://api.imgbb.com/1/upload?key=${imageHostKey}`
 
         const university = form.university.value;
-        console.log("🚀 ~ file: About.js:37 ~ handleUserUpdate ~ university", university)
         const address = form.address.value;
-        console.log("🚀 ~ file: About.js:39 ~ handleUserUpdate ~ address", address)
 
+
+
+
+        fetch(url, {
+            method: 'POST',
+            body: formData
+        })
+            .then(res => res.json())
+
+            .then(imgData => {
+                console.log(imgData);
+                if (imgData.success) {
+                    fetch(`http://localhost:5000/user?email=${user?.email}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'content-type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            name: name,
+                            email: email,
+                            university: university,
+                            address: address,
+                            image: imgData?.data.url
+
+                        })
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.acknowledged) {
+                                refetch()
+                                toast.success('user updated successfully')
+                                setModal(false)
+                            }
+
+                        })
+                }
+            });
 
     }
 
@@ -53,7 +86,7 @@ const About = () => {
                                 margin: 'auto',
                                 height: '180px',
                                 width: '180px'
-                            }} alt={userInfo?.name} src={userInfo?.profileImage} />
+                            }} alt={userInfo?.name} src={userInfo?.image} />
                         </div>
                         <div>
                             <label htmlFor="name" className="block mb-2 text-sm">Full Name</label>
@@ -88,7 +121,7 @@ const About = () => {
                         <h3 className="text-sm text-white font-bold">Your Name</h3>
                         <input name="name" type="text" className="input w-full input-bordered font-semibold" />
                         <h3 className="text-sm text-white font-bold">Your Email</h3>
-                        <input name="email" type="email" className="input w-full input-bordered font-semibold" />
+                        <input readOnly defaultValue={user?.email} name="email" type="email" className="input w-full input-bordered font-semibold" />
                         <h3 className="text-sm text-white font-bold">Profile photo</h3>
                         <input name="photo" type="file" className="input w-full input-bordered font-semibold" />
                         <h3 className="text-sm text-white font-bold">Your University</h3>

@@ -45,7 +45,7 @@ const AuthProvider = ({ children }) => {
         return () => unsubscribe();
     }, [])
 
-    const { data: userData = [], isLoading } = useQuery({
+    const { data: userData = [], isLoading, refetch } = useQuery({
         queryKey: ['userData'],
         queryFn: async () => {
             const res = await fetch(`http://localhost:5000/user?email=${user?.email}`)
@@ -68,7 +68,8 @@ const AuthProvider = ({ children }) => {
         logOut,
         user,
         loading,
-        userData
+        userData,
+        refetch
     }
     return (
         <AuthContext.Provider value={authInfo}>
