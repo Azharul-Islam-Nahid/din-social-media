@@ -38,7 +38,7 @@ const About = () => {
             .then(imgData => {
                 console.log(imgData);
                 if (imgData.success) {
-                    fetch(`http://localhost:5000/user?email=${user?.email}`, {
+                    fetch(`https://din-social-media-server.vercel.app/user?email=${user?.email}`, {
                         method: 'PATCH',
                         headers: {
                             'content-type': 'application/json',

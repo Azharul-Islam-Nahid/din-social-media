@@ -15,7 +15,7 @@ import {
 
 import 'stream-chat-react/dist/css/index.css'
 
-const apiKey = "9h5aj4vcc6dk";
+const apiKey = process.env.REACT_APP_stream_key;
 
 const user = {
     id: 'john',

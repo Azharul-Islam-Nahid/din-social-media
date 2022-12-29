@@ -65,7 +65,7 @@ const Register = () => {
                 .then(imgData => {
                     console.log(imgData);
                     if (imgData.success) {
-                        axios.post(`http://localhost:5000/users`, {
+                        axios.post(`https://din-social-media-server.vercel.app/users`, {
                             name: name,
                             email: email,
                             profileImage: imgData?.data.url,

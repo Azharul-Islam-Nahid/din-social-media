@@ -37,7 +37,7 @@ const AddPost = () => {
                 if (imgData.success) {
 
 
-                    axios.post(`http://localhost:5000/userpost`, {
+                    axios.post(`https://din-social-media-server.vercel.app/userpost`, {
                         userName: userName,
                         address: address,
                         userImage: userImage,

@@ -8,7 +8,7 @@ const Media = () => {
     const { data: userPosts = [], isLoading } = useQuery({
         queryKey: ['userPosts'],
         queryFn: async () => {
-            const res = await fetch(`http://localhost:5000/userposts`)
+            const res = await fetch(`https://din-social-media-server.vercel.app/userposts`)
             const data = await res.json()
             return data
         }

@@ -8,7 +8,7 @@ const SortedPosts = () => {
     const { data: userPosts = [], isLoading } = useQuery({
         queryKey: ['userPosts'],
         queryFn: async () => {
-            const res = await fetch(`http://localhost:5000/sortedposts`)
+            const res = await fetch(`https://din-social-media-server.vercel.app/sortedposts`)
             const data = await res.json()
             return data
         }
